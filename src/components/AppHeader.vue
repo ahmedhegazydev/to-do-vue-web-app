@@ -63,9 +63,9 @@ export default {
 
 .header-content {
   display: flex;
-  justify-content: space-between; /* Distribute space between the items */
+  justify-content: space-between;
   align-items: center;
-  padding: 0 20px; /* Add some horizontal padding */
+  padding: 0 20px;
 }
 
 h1 {
@@ -75,7 +75,7 @@ h1 {
 }
 
 .search-input {
-  width: 200px; /* Adjust the width of the search input as needed */
+  width: 200px;
   max-width: 300px;
 }
 </style>
