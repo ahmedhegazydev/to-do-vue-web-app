@@ -1,21 +1,30 @@
 <template>
   <header class="app-header">
-    <div class="header-content">
-      <h1>{{ currentDate }}</h1>
-      <ClearableInput class="search-input" placeholder="Search todos" />
+    <div style="display: flex; flex-direction: column; gap: 20px">
+      <button
+        class="settings-btn"
+        v-tippy="{ content: 'Settings', placement: 'bottom' }"
+      >
+        <i class="fas fa-cog"></i>
+      </button>
 
-      <RoundedButton
-        text="Add Todo"
-        buttonType="primary"
-        @click="onSecondaryClick"
-      />
-      <!-- Button without background -->
-      <RoundedButton
-        text="Secondary Button"
-        buttonType="secondary"
-        noBg
-        @click="onSecondaryClick"
-      />
+      <div class="header-content">
+        <h1>{{ currentDate }}</h1>
+        <ClearableInput class="search-input" placeholder="Search todos" />
+
+        <RoundedButton
+          text="Add Todo"
+          buttonType="primary"
+          @click="onSecondaryClick"
+        />
+        <!-- Button without background -->
+        <RoundedButton
+          text="Remove Done"
+          buttonType="secondary"
+          noBg
+          @click="onSecondaryClick"
+        />
+      </div>
     </div>
   </header>
 </template>
@@ -23,6 +32,7 @@
 <script>
 import ClearableInput from './ClearableInput.vue'; // Make sure to import the ClearableInput component
 import RoundedButton from './RoundedButton.vue';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 export default {
   name: 'AppHeader',
@@ -77,5 +87,19 @@ h1 {
 .search-input {
   width: 200px;
   max-width: 300px;
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #000000;
+  cursor: pointer;
+  align-self: flex-end;
+  padding: 10px;
+}
+
+.settings-btn:hover {
+  color: #4c3c8d; /* Change color on hover */
 }
 </style>

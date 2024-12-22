@@ -11,9 +11,16 @@ defineProps({
 });
 
 // Emits
-defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue']); // Define `emit` function
 
+// Reactive data
 const inputValue = ref('');
+
+// Methods
+const clearInput = () => {
+  inputValue.value = ''; // Clears the input value
+  emit('update:modelValue', inputValue.value); // Emit the updated value
+};
 </script>
 
 <template>
@@ -40,7 +47,7 @@ const inputValue = ref('');
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 100%; /* Flexible width */
 }
 
 .input-field {
@@ -50,11 +57,11 @@ const inputValue = ref('');
   border: 1px solid #ccc;
   font-size: 16px;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease; /* Smooth transition */
 }
 
 .input-field:focus {
-  border-color: #4c3c8d;
+  border-color: #4c3c8d; /* Desired focus border color */
 }
 
 .clear-btn {
@@ -68,5 +75,6 @@ const inputValue = ref('');
 
 .clear-btn:hover {
   color: #f00;
+  cursor: pointer;
 }
 </style>
