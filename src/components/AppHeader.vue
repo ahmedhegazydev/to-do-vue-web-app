@@ -1,13 +1,11 @@
 <template>
   <header class="app-header">
-    <div style="display: flex; flex-direction: column; gap: 20px">
-      <button
-        class="settings-btn"
-        v-tippy="{ content: 'Settings', placement: 'bottom' }"
+    <div class="flex-column">
+      <SettingsButton
+        tooltip-content="Settings"
+        dialog-close-button-text="Cancel"
         @click="showDialog = true"
-      >
-        <i class="fas fa-cog"></i>
-      </button>
+      />
 
       <div class="header-content">
         <h1>{{ currentDate }}</h1>
@@ -27,31 +25,31 @@
       </div>
     </div>
 
-    <!-- Rounded Dialog -->
-    <div
+    <!-- Rounded Dialog Component -->
+    <RoundedDialog
       v-if="showDialog"
-      class="dialog-backdrop"
-      @click.self="showDialog = false"
-    >
-      <div class="dialog">
-        <h2>Settings</h2>
-        <p>Here you can adjust your settings.</p>
-        <button @click="showDialog = false" class="close-btn">Close</button>
-      </div>
-    </div>
+      title="Settings"
+      message="Here you can adjust your settings."
+      close-button-text="Cancel"
+      @close="showDialog = false"
+    />
   </header>
 </template>
 
 <script>
 import ClearableInput from './ClearableInput.vue';
 import RoundedButton from './RoundedButton.vue';
+import RoundedDialog from './RoundedDialog.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
+import SettingsButton from './SettingsButton.vue';
 
 export default {
   name: 'AppHeader',
   components: {
     ClearableInput,
     RoundedButton,
+    RoundedDialog,
+    SettingsButton,
   },
   data() {
     return {
@@ -69,9 +67,6 @@ export default {
     },
     onSecondaryClick() {
       console.log('Secondary button clicked!');
-    },
-    onCustomButtonClick() {
-      console.log('Custom button clicked!');
     },
   },
 };
@@ -102,67 +97,9 @@ h1 {
   max-width: 300px;
 }
 
-.settings-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #000000;
-  cursor: pointer;
-  align-self: flex-end;
-  padding: 10px;
-}
-
-.settings-btn:hover {
-  color: #4c3c8d;
-}
-
-/* Dialog Backdrop */
-.dialog-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+.flex-column {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-/* Dialog Box */
-.dialog {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-
-.dialog h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
-}
-
-.dialog p {
-  margin: 15px 0;
-  color: #666;
-}
-
-.close-btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  background: #4c3c8d;
-  color: white;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  background: #3a2e6b;
+  flex-direction: column;
+  gap: 20px;
 }
 </style>
