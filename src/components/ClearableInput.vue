@@ -11,7 +11,7 @@ defineProps({
 });
 
 // Emits
-const emit = defineEmits(['update:modelValue']); // Define `emit` function
+const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
 const inputValue = ref('');

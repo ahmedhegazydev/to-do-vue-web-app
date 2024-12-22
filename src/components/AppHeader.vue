@@ -4,6 +4,7 @@
       <button
         class="settings-btn"
         v-tippy="{ content: 'Settings', placement: 'bottom' }"
+        @click="showDialog = true"
       >
         <i class="fas fa-cog"></i>
       </button>
@@ -17,7 +18,6 @@
           buttonType="primary"
           @click="onSecondaryClick"
         />
-        <!-- Button without background -->
         <RoundedButton
           text="Remove Done"
           buttonType="secondary"
@@ -26,11 +26,24 @@
         />
       </div>
     </div>
+
+    <!-- Rounded Dialog -->
+    <div
+      v-if="showDialog"
+      class="dialog-backdrop"
+      @click.self="showDialog = false"
+    >
+      <div class="dialog">
+        <h2>Settings</h2>
+        <p>Here you can adjust your settings.</p>
+        <button @click="showDialog = false" class="close-btn">Close</button>
+      </div>
+    </div>
   </header>
 </template>
 
 <script>
-import ClearableInput from './ClearableInput.vue'; // Make sure to import the ClearableInput component
+import ClearableInput from './ClearableInput.vue';
 import RoundedButton from './RoundedButton.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -43,10 +56,10 @@ export default {
   data() {
     return {
       currentDate: this.formatDate(new Date()),
+      showDialog: false, // State for showing/hiding dialog
     };
   },
   methods: {
-    // Method to format the current date
     formatDate(date) {
       const options = { weekday: 'long', month: 'long', day: 'numeric' };
       return date.toLocaleDateString('en-US', options);
@@ -100,6 +113,56 @@ h1 {
 }
 
 .settings-btn:hover {
-  color: #4c3c8d; /* Change color on hover */
+  color: #4c3c8d;
+}
+
+/* Dialog Backdrop */
+.dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Dialog Box */
+.dialog {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.dialog h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.dialog p {
+  margin: 15px 0;
+  color: #666;
+}
+
+.close-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4c3c8d;
+  color: white;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #3a2e6b;
 }
 </style>
