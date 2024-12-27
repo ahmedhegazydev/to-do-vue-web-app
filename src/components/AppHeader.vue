@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       currentDate: this.formatDate(new Date()),
-      showDialog: false, // State for showing/hiding dialog
+      showDialog: false,
     };
   },
   methods: {
