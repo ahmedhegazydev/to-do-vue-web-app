@@ -1,11 +1,15 @@
 <template>
-  <div class="dialog-backdrop">
+  <div class="dialog-backdrop" @click.self="onClose">
     <div class="dialog">
       <h2>{{ title }}</h2>
       <p>{{ message }}</p>
       <slot></slot>
-      <!-- Optional slot for custom content -->
-      <button @click="onClose" class="close-btn">{{ closeButtonText }}</button>
+      <div class="actions">
+        <button class="save-btn" @click="onSave">{{ saveButtonText }}</button>
+        <button class="cancel-btn" @click="onClose">
+          {{ cancelButtonText }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -22,21 +26,55 @@ export default {
       type: String,
       default: 'Dialog message goes here.',
     },
-    closeButtonText: {
+    saveButtonText: {
       type: String,
-      default: 'Close',
+      default: 'Save',
+    },
+    cancelButtonText: {
+      type: String,
+      default: 'Cancel',
     },
   },
-  emits: ['close'], // Emit a close event when the button is clicked
+  emits: ['close', 'save'], // Emit close and save events
   methods: {
     onClose() {
       this.$emit('close'); // Emit close event
+    },
+    onSave() {
+      this.$emit('save'); // Emit save event
     },
   },
 };
 </script>
 
 <style scoped>
+.actions {
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.save-btn {
+  padding: 10px 20px;
+  background: #5bc08e;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 0 0 10px;
+}
+
 .dialog-backdrop {
   position: fixed;
   top: 0;

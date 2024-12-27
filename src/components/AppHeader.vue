@@ -28,11 +28,15 @@
     <!-- Rounded Dialog Component -->
     <RoundedDialog
       v-if="showDialog"
-      title="Settings"
-      message="Here you can adjust your settings."
-      close-button-text="Cancel"
-      @close="showDialog = false"
-    />
+      title=""
+      message=""
+      :saveButtonText="'Save Todo'"
+      :cancelButtonText="'Cancel'"
+      @close="handleClose"
+      @save="handleSave"
+    >
+      <AddTodoDialog />
+    </RoundedDialog>
   </header>
 </template>
 
@@ -42,6 +46,7 @@ import RoundedButton from './RoundedButton.vue';
 import RoundedDialog from './RoundedDialog.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import SettingsButton from './SettingsButton.vue';
+import AddTodoDialog from './AddTodoDialog.vue';
 
 export default {
   name: 'AppHeader',
@@ -50,6 +55,7 @@ export default {
     RoundedButton,
     RoundedDialog,
     SettingsButton,
+    AddTodoDialog,
   },
   data() {
     return {
@@ -62,11 +68,11 @@ export default {
       const options = { weekday: 'long', month: 'long', day: 'numeric' };
       return date.toLocaleDateString('en-US', options);
     },
-    onPrimaryClick() {
-      console.log('Primary button clicked!');
+    handleClose() {
+      console.log('Dialog closed');
     },
-    onSecondaryClick() {
-      console.log('Secondary button clicked!');
+    handleSave() {
+      console.log('Save action triggered');
     },
   },
 };
