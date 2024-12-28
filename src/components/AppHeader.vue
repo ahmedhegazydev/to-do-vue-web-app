@@ -35,7 +35,10 @@
       @close="handleClose"
       @save="handleSave"
     >
-      <AddTodoDialog />
+      <AddTodoDialog
+        :initialTodo="currentTodo"
+        @update-todo="handleTodoUpdate"
+      />
     </RoundedDialog>
   </header>
 </template>
@@ -50,6 +53,7 @@ import AddTodoDialog from './AddTodoDialog.vue';
 
 export default {
   name: 'AppHeader',
+
   components: {
     ClearableInput,
     RoundedButton,
@@ -61,9 +65,13 @@ export default {
     return {
       currentDate: this.formatDate(new Date()),
       showDialog: false,
+      currentTodo: {}, // Initialize with empty or default values
     };
   },
   methods: {
+    handleTodoUpdate(updatedTodo) {
+      this.currentTodo = updatedTodo;
+    },
     formatDate(date) {
       const options = { weekday: 'long', month: 'long', day: 'numeric' };
       return date.toLocaleDateString('en-US', options);
@@ -73,6 +81,15 @@ export default {
     },
     handleSave() {
       console.log('Save action triggered');
+      // Save currentTodo to local database
+      this.saveToLocalDatabase(this.currentTodo);
+      this.showDialog = false;
+    },
+
+    saveToLocalDatabase(todo) {
+      const existingTodos = JSON.parse(localStorage.getItem('todos')) || [];
+      existingTodos.push(todo);
+      localStorage.setItem('todos', JSON.stringify(existingTodos));
     },
   },
 };

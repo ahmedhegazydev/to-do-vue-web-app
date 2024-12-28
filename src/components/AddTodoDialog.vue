@@ -35,6 +35,7 @@
               v-model="selectedDate"
               class="input-field"
               placeholder="dd/mm/yyyy"
+              @input="handleInput"
             />
             <div @click="showPicker = true" class="calendar-icon">
               <svg
@@ -105,6 +106,9 @@ import { format } from 'date-fns';
 export default {
   name: 'AddTodoDialog',
 
+  props: {
+    initialTodo: Object,
+  },
   components: {
     VueDatePicker: DatePicker,
   },
@@ -122,6 +126,45 @@ export default {
     };
   },
   methods: {
+    handleInput(event) {
+      let input = event.target.value.replace(/[^\d]/g, ''); // Remove non-digit characters
+      let formatted = '';
+
+      // Ensure the input length does not exceed 8 characters (ddmmyyyy)
+      if (input.length > 8) {
+        input = input.slice(0, 8);
+      }
+
+      // Format the input as dd/MM/yyyy
+      if (input.length <= 2) {
+        formatted = input; // Day
+      } else if (input.length <= 4) {
+        formatted = `${input.slice(0, 2)}/${input.slice(2)}`; // Day/Month
+      } else {
+        formatted = `${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(
+          4
+        )}`; // Day/Month/Year
+      }
+
+      // Validate the formatted date
+      const [day, month, year] = formatted.split('/').map(Number);
+
+      if (month && (month < 1 || month > 12)) {
+        return; // Invalid month: do not update the input
+      }
+
+      if (day && month) {
+        const daysInMonth = new Date(year || 2023, month, 0).getDate(); // Get days in the given month
+        if (day < 1 || day > daysInMonth) {
+          return; // Invalid day: do not update the input
+        }
+      }
+
+      // Only update the formatted date if it's valid
+
+      this.selectedDate = formatted;
+    },
+
     handleDialogClick(event) {
       // Check if the click is outside the date picker container
       const datePickerContainer = this.$refs.datePickerContainer;
@@ -160,13 +203,20 @@ export default {
       }
     },
     saveTodo() {
-      console.log('Saving todo:', {
+      // console.log('Saving todo:', {
+      //   text: this.todoText,
+      //   timeframe: this.selectedTimeframe,
+      //   date: this.selectedDate,
+      //   tags: this.tags,
+      // });
+      // this.$emit('close');
+
+      this.$emit('update-todo', {
         text: this.todoText,
         timeframe: this.selectedTimeframe,
         date: this.selectedDate,
         tags: this.tags,
       });
-      this.$emit('close');
     },
   },
 };
