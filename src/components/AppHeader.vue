@@ -122,7 +122,7 @@ export default {
 .app-header {
   width: 100%;
   padding: 20px 0;
-  background-color: #f8f9fa;
+  /* background-color: #f8f9fa; */
 }
 
 .header-content {
