@@ -25,11 +25,11 @@
       :cancelButtonText="'Cancel'"
       @close="handleClose"
       @save="handleSave"
-      @update-todo="handleTodoUpdate"
     >
       <AddTodoDialog
+        ref="todoDialog"
         :initialTodo="currentTodo"
-        @update-todo="handleTodoUpdate"
+        :onSave="handleTodoSave"
       />
     </RoundedDialog>
   </header>
@@ -65,6 +65,8 @@ export default {
   mounted() {
     localStorage.clear();
   },
+  emits: [],
+
   methods: {
     handleTodoUpdate(updatedTodo) {
       this.currentTodo = updatedTodo;
@@ -79,18 +81,23 @@ export default {
       console.log('Dialog closed');
     },
     handleSave() {
-      console.log('Save action triggered');
-      console.log('Current todo:', this.currentTodo);
-      // Save currentTodo to local database
-      this.saveToLocalDatabase(this.currentTodo);
-      this.showDialog = false;
+      console.log('Save triggered from RoundedDialog');
+      // Trigger save in AddTodoDialog
+      if (this.$refs.todoDialog) {
+        this.$refs.todoDialog.saveTodo();
+      }
     },
 
-    saveToLocalDatabase(todo) {
+    handleTodoSave(newTodo) {
+      console.log('Todo saved:', newTodo);
+      this.currentTodo = newTodo;
+
+      // Save the todo to localStorage or handle it as needed
       const existingTodos = JSON.parse(localStorage.getItem('todos')) || [];
-      existingTodos.push(todo);
-      console.log('Saving todo:', todo);
+      existingTodos.push(newTodo);
       localStorage.setItem('todos', JSON.stringify(existingTodos));
+
+      this.showDialog = false;
 
       // Show toast for all saved todos as strings
       existingTodos.forEach((todoItem, index) => {

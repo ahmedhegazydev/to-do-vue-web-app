@@ -104,16 +104,20 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import { format } from 'date-fns';
 import { useToast } from 'vue-toastification';
 const toast = useToast();
+import { toRaw } from 'vue';
 
 export default {
   name: 'AddTodoDialog',
 
   props: {
     initialTodo: Object,
+    onSave: Function, // Accept a save handler from the parent
   },
   components: {
     VueDatePicker: DatePicker,
   },
+
+  emits: ['save'], // Declare 'save' event
 
   data() {
     return {
@@ -213,25 +217,27 @@ export default {
         toast.error('Please select a date.');
         return;
       }
-      console.log('Saving todo:', {
-        text: this.todoText,
-        timeframe: this.selectedTimeframe,
-        date: this.selectedDate,
-        tags: this.tags,
-      });
-      // this.$emit('close');
+      const rawTodo = {
+        text: toRaw(this.todoText),
+        timeframe: toRaw(this.selectedTimeframe),
+        date: toRaw(this.selectedDate),
+        tags: toRaw(this.tags),
+      };
 
-      this.$emit('update-todo', {
-        text: this.todoText,
-        timeframe: this.selectedTimeframe,
-        date: this.selectedDate,
-        tags: this.tags,
-      });
+      console.log('Saving todo:', rawTodo);
+
+      // Emit the save event with the todo data
+      if (this.onSave) {
+        this.onSave(rawTodo);
+      }
 
       // Show a success toast
       toast.success('Todo saved successfully!');
     },
   },
+
+  created() {},
+  beforeUnmount() {},
 };
 </script>
 
