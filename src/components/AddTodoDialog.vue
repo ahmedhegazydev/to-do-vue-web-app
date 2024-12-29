@@ -102,6 +102,8 @@
 import DatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { format } from 'date-fns';
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 
 export default {
   name: 'AddTodoDialog',
@@ -127,10 +129,9 @@ export default {
   },
   methods: {
     handleInput(event) {
-      let input = event.target.value.replace(/[^\d]/g, ''); // Remove non-digit characters
+      let input = event.target.value.replace(/[^\d]/g, '');
       let formatted = '';
 
-      // Ensure the input length does not exceed 8 characters (ddmmyyyy)
       if (input.length > 8) {
         input = input.slice(0, 8);
       }
@@ -150,18 +151,17 @@ export default {
       const [day, month, year] = formatted.split('/').map(Number);
 
       if (month && (month < 1 || month > 12)) {
-        return; // Invalid month: do not update the input
+        return;
       }
 
       if (day && month) {
         const daysInMonth = new Date(year || 2023, month, 0).getDate(); // Get days in the given month
         if (day < 1 || day > daysInMonth) {
-          return; // Invalid day: do not update the input
+          return;
         }
       }
 
       // Only update the formatted date if it's valid
-
       this.selectedDate = formatted;
     },
 
@@ -203,12 +203,22 @@ export default {
       }
     },
     saveTodo() {
-      // console.log('Saving todo:', {
-      //   text: this.todoText,
-      //   timeframe: this.selectedTimeframe,
-      //   date: this.selectedDate,
-      //   tags: this.tags,
-      // });
+      // Validate the fields
+      if (!this.todoText.trim()) {
+        toast.error('Please enter a todo description.');
+        return;
+      }
+
+      if (!this.selectedDate) {
+        toast.error('Please select a date.');
+        return;
+      }
+      console.log('Saving todo:', {
+        text: this.todoText,
+        timeframe: this.selectedTimeframe,
+        date: this.selectedDate,
+        tags: this.tags,
+      });
       // this.$emit('close');
 
       this.$emit('update-todo', {
@@ -217,6 +227,9 @@ export default {
         date: this.selectedDate,
         tags: this.tags,
       });
+
+      // Show a success toast
+      toast.success('Todo saved successfully!');
     },
   },
 };

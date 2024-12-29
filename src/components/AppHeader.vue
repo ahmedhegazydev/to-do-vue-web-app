@@ -11,17 +11,8 @@
         <h1>{{ currentDate }}</h1>
         <ClearableInput class="search-input" placeholder="Search todos" />
 
-        <RoundedButton
-          text="Add Todo"
-          buttonType="primary"
-          @click="onSecondaryClick"
-        />
-        <RoundedButton
-          text="Remove Done"
-          buttonType="secondary"
-          noBg
-          @click="onSecondaryClick"
-        />
+        <RoundedButton text="Add Todo" buttonType="primary" />
+        <RoundedButton text="Remove Done" buttonType="secondary" noBg />
       </div>
     </div>
 
@@ -34,6 +25,7 @@
       :cancelButtonText="'Cancel'"
       @close="handleClose"
       @save="handleSave"
+      @update-todo="handleTodoUpdate"
     >
       <AddTodoDialog
         :initialTodo="currentTodo"
@@ -50,6 +42,8 @@ import RoundedDialog from './RoundedDialog.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import SettingsButton from './SettingsButton.vue';
 import AddTodoDialog from './AddTodoDialog.vue';
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 
 export default {
   name: 'AppHeader',
@@ -65,12 +59,17 @@ export default {
     return {
       currentDate: this.formatDate(new Date()),
       showDialog: false,
-      currentTodo: {}, // Initialize with empty or default values
+      currentTodo: {},
     };
+  },
+  mounted() {
+    localStorage.clear();
   },
   methods: {
     handleTodoUpdate(updatedTodo) {
       this.currentTodo = updatedTodo;
+      console.log('Updated todo:', updatedTodo);
+      console.log('Received updated todo:', updatedTodo);
     },
     formatDate(date) {
       const options = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -81,6 +80,7 @@ export default {
     },
     handleSave() {
       console.log('Save action triggered');
+      console.log('Current todo:', this.currentTodo);
       // Save currentTodo to local database
       this.saveToLocalDatabase(this.currentTodo);
       this.showDialog = false;
@@ -89,7 +89,16 @@ export default {
     saveToLocalDatabase(todo) {
       const existingTodos = JSON.parse(localStorage.getItem('todos')) || [];
       existingTodos.push(todo);
+      console.log('Saving todo:', todo);
       localStorage.setItem('todos', JSON.stringify(existingTodos));
+
+      // Show toast for all saved todos as strings
+      existingTodos.forEach((todoItem, index) => {
+        toast.success(`Todo #${index + 1}: ${JSON.stringify(todoItem)}`, {
+          position: 'top-right',
+          timeout: 3000,
+        });
+      });
     },
   },
 };
