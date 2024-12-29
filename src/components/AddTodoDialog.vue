@@ -52,7 +52,6 @@
             </div>
             <VueDatePicker
               v-if="showPicker"
-              :is="VueDatePicker"
               v-model="selectedDate"
               :inline="true"
               @close="showPicker = false"
@@ -189,6 +188,9 @@ export default {
     updateSelectedDate(value) {
       // Format the date to dd/mm/yyyy
       this.selectedDate = value ? format(new Date(value), 'dd/MM/yyyy') : '';
+
+      // Close the date picker
+      this.showPicker = false;
     },
     formatSelectedDate(rawDate) {
       // Format the raw date value to dd/mm/yyyy
@@ -199,6 +201,9 @@ export default {
     },
     clearDate() {
       this.selectedDate = '';
+
+      // Close the date picker
+      this.showPicker = false;
     },
     addTag() {
       if (this.tagInput.trim()) {

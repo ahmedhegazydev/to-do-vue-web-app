@@ -4,14 +4,17 @@
       <SettingsButton
         tooltip-content="Settings"
         dialog-close-button-text="Cancel"
-        @click="showDialog = true"
       />
 
       <div class="header-content">
         <h1>{{ currentDate }}</h1>
         <ClearableInput class="search-input" placeholder="Search todos" />
 
-        <RoundedButton text="Add Todo" buttonType="primary" />
+        <RoundedButton
+          text="Add Todo"
+          buttonType="primary"
+          @click="showDialog = true"
+        />
         <RoundedButton text="Remove Done" buttonType="secondary" noBg />
       </div>
     </div>
@@ -42,8 +45,8 @@ import RoundedDialog from './RoundedDialog.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import SettingsButton from './SettingsButton.vue';
 import AddTodoDialog from './AddTodoDialog.vue';
-import { useToast } from 'vue-toastification';
-const toast = useToast();
+// import { useToast } from 'vue-toastification';
+// const toast = useToast();
 
 export default {
   name: 'AppHeader',
@@ -63,7 +66,7 @@ export default {
     };
   },
   mounted() {
-    localStorage.clear();
+    // localStorage.clear();
   },
   emits: [],
 
@@ -79,6 +82,9 @@ export default {
     },
     handleClose() {
       console.log('Dialog closed');
+
+      // Close the date picker
+      this.showPicker = false;
     },
     handleSave() {
       console.log('Save triggered from RoundedDialog');
@@ -97,15 +103,16 @@ export default {
       existingTodos.push(newTodo);
       localStorage.setItem('todos', JSON.stringify(existingTodos));
 
-      this.showDialog = false;
+      // Close the date picker
+      this.showPicker = false;
 
       // Show toast for all saved todos as strings
-      existingTodos.forEach((todoItem, index) => {
-        toast.success(`Todo #${index + 1}: ${JSON.stringify(todoItem)}`, {
-          position: 'top-right',
-          timeout: 3000,
-        });
-      });
+      // existingTodos.forEach((todoItem, index) => {
+      //   toast.success(`Todo #${index + 1}: ${JSON.stringify(todoItem)}`, {
+      //     position: 'top-right',
+      //     timeout: 3000,
+      //   });
+      // });
     },
   },
 };
